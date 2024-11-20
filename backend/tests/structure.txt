@@ -1,0 +1,38 @@
+app.py (Main application)
+
+Flask routes
+Application initialization
+Main execution logic
+
+
+config/
+
+logger_config.py: Logging configuration
+.env: Environment variables
+
+
+services/
+
+firebase_service.py: Firebase initialization and operations
+face_recognition_service.py: Face recognition core logic
+video_service.py: Video capture and frame generation
+
+
+models/
+
+face_detector.py: MTCNN and InceptionResnetV1 model initialization
+
+
+utils/
+
+embedding_utils.py: Functions for handling embeddings
+
+
+templates/
+
+index.html: Frontend template
+
+
+static/
+
+CSS and JavaScript files

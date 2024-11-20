@@ -1,0 +1,26 @@
+.navbar {
+	background-color: #333; /* Dark background color */
+	color: #fff; /* White text color */
+	padding: 10px 0;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adding a shadow for depth */
+}
+
+.navbar-list {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.navbar-item {
+	display: inline-block;
+	margin: 0 10px;
+	cursor: pointer;
+	font-size: 18px; /* Larger font size */
+	font-weight: bold; /* Bold text */
+	transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.navbar-item:hover {
+	color: #ffd700; /* Change text color on hover to gold */
+}

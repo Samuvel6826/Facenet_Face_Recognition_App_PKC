@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 95%;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #video-stream {
+            width: 100%;
+            max-width: 640px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .names-container {
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .names-container h2 {
+            margin: 0 0 15px 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .detected-names {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 40px;
+            padding: 10px;
+        }
+
+        .name-tag {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .name-tag::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .no-faces {
+            color: #999;
+            font-style: italic;
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .reload-button {
+            display: block;
+            margin: 20px auto 0;
+            padding: 12px 24px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .reload-button:hover {
+            background-color: #1565c0;
+        }
+
+        .reload-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Face Recognition System</h1>
+        <p>Real-time face detection and recognition</p>
+    </header>
+    <div class="container">
+        <div class="video-container">
+            <img src="{{ url_for('video_feed') }}" alt="Video Stream" id="video-stream">
+        </div>
+        <div class="names-container">
+            <h2>Currently Detected People</h2>
+            <div class="detected-names" id="detected-names">
+                <span class="no-faces">No faces currently detected</span>
+            </div>
+        </div>
+        <button class="reload-button" onclick="reloadEmbeddings()">Reload Face Data</button>
+    </div>
+
+    <script>
+        const namesContainer = document.getElementById('detected-names');
+        let previousNames = new Set();
+
+        function setupEventSource() {
+            const eventSource = new EventSource("{{ url_for('detected_names_feed') }}");
+
+            eventSource.onmessage = function (event) {
+                const names = JSON.parse(event.data);
+                updateNames(names);
+            };
+
+            eventSource.onerror = function () {
+                console.error('Connection lost. Please refresh the page.');
+                eventSource.close();
+            };
+        }
+
+        function updateNames(names) {
+            const currentNames = new Set(names);
+            if (JSON.stringify([...previousNames]) !== JSON.stringify([...currentNames])) {
+                namesContainer.innerHTML = names.length
+                    ? names.map(name => `<span class="name-tag">${name}</span>`).join('')
+                    : '<span class="no-faces">No faces currently detected</span>';
+                previousNames = currentNames;
+            }
+        }
+
+        async function reloadEmbeddings() {
+            const button = document.querySelector('.reload-button');
+            button.disabled = true;
+            button.textContent = 'Reloading...';
+
+            try {
+                const response = await fetch('/reload_embeddings', { method: 'POST' });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'Failed to reload face data');
+                alert(data.message);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Reload Face Data';
+            }
+        }
+
+        setupEventSource();
+    </script>
+</body>
+
+</html>
