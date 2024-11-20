@@ -1,47 +1,127 @@
-* {
-	box-sizing: border-box;
-}
-
 body {
 	font-family: Arial, sans-serif;
 	margin: 0;
 	padding: 0;
-	background-color: #f4f4f4;
-	color: #333;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	height: 100vh;
-	text-align: center;
+	background-color: #f0f0f0;
+	min-height: 100vh;
 }
 
 header {
 	text-align: center;
-	margin-bottom: 10px;
+	padding: 20px;
+	width: 100%;
+	background-color: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-	font-size: 2.5em;
-	color: #2c3e50;
+header h1 {
+	margin: 0;
+	font-size: 24px;
+	color: #333;
 }
 
-p {
-	font-size: 1.2em;
-	color: #7f8c8d;
+header p {
+	margin: 5px 0 0;
+	font-size: 16px;
+	color: #666;
+}
+
+.container {
+	max-width: 800px;
+	width: 95%;
+	padding: 20px;
+	background-color: #ffffff;
+	box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	margin: 20px;
 }
 
 .video-container {
-	margin: 20px 0;
-	border: 2px solid #2980b9;
-	border-radius: 10px;
-	overflow: hidden;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
 }
 
-video,
-img {
+#video-stream {
 	width: 100%;
-	max-width: 1000px;
-	border-radius: 10px;
+	max-width: 640px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.names-container {
+	padding: 15px;
+	background-color: #f9f9f9;
+	border-radius: 8px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	margin-top: 20px;
+}
+
+.names-container h2 {
+	margin: 0 0 15px 0;
+	color: #333;
+	text-align: center;
+}
+
+.detected-names {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: center;
+	min-height: 40px;
+	padding: 10px;
+}
+
+.name-tag {
+	background-color: #e3f2fd;
+	color: #1976d2;
+	padding: 8px 16px;
+	border-radius: 20px;
+	font-size: 14px;
+	display: inline-flex;
+	align-items: center;
+}
+
+.name-tag::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	background-color: #4caf50;
+	border-radius: 50%;
+	margin-right: 8px;
+}
+
+.no-faces {
+	color: #999;
+	font-style: italic;
+	font-size: 14px;
+	text-align: center;
+	width: 100%;
+}
+
+.reload-button {
+	display: block;
+	margin: 20px auto 0;
+	padding: 12px 24px;
+	background-color: #1976d2;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.3s;
+}
+
+.reload-button:hover {
+	background-color: #1565c0;
+}
+
+.reload-button:disabled {
+	background-color: #ccc;
+	cursor: not-allowed;
 }
